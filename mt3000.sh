@@ -31,13 +31,23 @@ install_depends_apps() {
 # 切换到原厂OPKG
 switch_glinet_opkg() {
     cp /etc/opkg/distfeeds.conf /etc/opkg/distfeeds.conf.bk
-	mt3000_opkg="https://cafe.cpolar.cn/wkdaily/gl-inet-onescript/raw/branch/master/mt-3000/distfeeds.conf"
-	wget -O /etc/opkg/distfeeds.conf ${mt3000_opkg}
+    mt3000_opkg="https://cafe.cpolar.cn/wkdaily/gl-inet-onescript/raw/branch/master/mt-3000/distfeeds.conf"
+    wget -O /etc/opkg/distfeeds.conf ${mt3000_opkg}
+    FILE="/etc/opkg.conf"
+    # 检查并注释掉 option check_signature 这一行
+    if grep -q "^option check_signature" "$FILE"; then
+        sed -i 's/^option check_signature/# option check_signature/' "$FILE"
+    fi
 }
 
 # 切换到iStoreOS的OPKG
-switch_istoreos_opkg(){
+switch_istoreos_opkg() {
     cp /etc/opkg/distfeeds.conf.bk /etc/opkg/distfeeds.conf
+    FILE="/etc/opkg.conf"
+    # 检查并还原被注释的 option check_signature 这一行
+    if grep -q "^# option check_signature" "$FILE"; then
+        sed -i 's/^# option check_signature/option check_signature/' "$FILE"
+    fi
 }
 
 # 卸载USB设备
@@ -151,7 +161,7 @@ change_overlay_usb() {
     fi
 }
 
-# 判断分区大小 
+# 判断分区大小
 check_overlay_size() {
     # 使用df命令获取/overlay分区的总大小（以1K块为单位）
     OVERLAY_SIZE=$(df /overlay | awk '/\/overlay/{print $2}')
