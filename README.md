@@ -9,3 +9,6 @@
 wget -O mt3000.sh https://cafe.cpolar.cn/wkdaily/istoreos-mt3000-script/raw/branch/master/mt3000.sh && chmod +x mt3000.sh && ./mt3000.sh
 
 ```
+
+## 固件整理备份
+https://github.com/wukongdaily/istoreos-mt3000-script/releases
